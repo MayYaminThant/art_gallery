@@ -2,7 +2,7 @@ import '../../ui/common_widget/common_widget.dart';
 import '../../ui/common_widget/curve_painter.dart';
 import 'package:flutter/material.dart';
 
-PreferredSizeWidget customAppBar(context, title) {
+PreferredSizeWidget customAppBar(context, title, GlobalKey<ScaffoldState> key) {
   final double height = 80;
   return PreferredSize(
     preferredSize: Size(MediaQuery.of(context).size.width, height + 0),
@@ -25,7 +25,9 @@ PreferredSizeWidget customAppBar(context, title) {
                 height: MediaQuery.of(context).size.height / 13,
                 child: IconButton(
                   onPressed: () {
-                    Scaffold.of(context).openDrawer();
+                    if (key.currentState != null) {
+                      key.currentState!.openDrawer();
+                    }
                   },
                   icon: Icon(
                     Icons.menu,

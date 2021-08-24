@@ -1,7 +1,7 @@
-import 'package:art_gallery/controller/bottom_nav_bar_controller.dart';
-import 'package:art_gallery/controller/category_list_controller.dart';
-import 'package:art_gallery/ui/common_widget/common_widget.dart';
-import 'package:art_gallery/ui/page/main_page.dart';
+import '../controller/bottom_nav_bar_controller.dart';
+import '../controller/category_list_controller.dart';
+import '../ui/common_widget/common_widget.dart';
+import '../ui/page/main_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

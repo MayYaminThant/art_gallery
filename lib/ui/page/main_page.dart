@@ -19,11 +19,13 @@ class MyMainPage extends StatefulWidget {
 }
 
 class _MyMainPageState extends State<MyMainPage> {
+  static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: customAppBar(context, widget.title),
+        key: scaffoldKey,
+        appBar: customAppBar(context, widget.title, scaffoldKey),
         drawer: MainDrawer(),
         bottomNavigationBar: BottomNavBar(),
         body: ViewModeWidget(),

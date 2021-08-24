@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 TextStyle categoryHeaderLstStyle(Color color) {
@@ -26,6 +25,16 @@ Color? get categoryColor {
 Color get appBarColor {
   return Colors.deepPurple;
 }
+
+SizedBox get sizeBoxBetweenColumnCells {
+  return SizedBox(height: 20);
+}
+
+SizedBox get sizeBoxBetweenRowCells {
+  return SizedBox(width: 20);
+}
+
+double get viewModePadding => 20;
 // class CategoryHeaderLstStyle {
 //   final Color? color;
 //   final double? fontSize;
