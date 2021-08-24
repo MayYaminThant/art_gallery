@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-TextStyle categoryHeaderLstStyle(Color color) {
+TextStyle categoryHeaderLstStyle(Color? color) {
   return TextStyle(
     color: color,
     fontSize: 17,

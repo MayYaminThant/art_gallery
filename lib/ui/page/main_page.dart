@@ -1,3 +1,5 @@
+import '../../ui/page/category_mode.dart';
+
 import '../../ui/menu/custom_app_bar.dart';
 import '../../ui/page/view_mode.dart';
 
@@ -8,6 +10,7 @@ import '../bottom_nav_bar.dart';
 
 final bottomNavs = [
   ViewModeWidget(),
+  CategoryMode(),
 ];
 
 class MyMainPage extends StatefulWidget {
@@ -28,7 +31,7 @@ class _MyMainPageState extends State<MyMainPage> {
         appBar: customAppBar(context, widget.title, scaffoldKey),
         drawer: MainDrawer(),
         bottomNavigationBar: BottomNavBar(),
-        body: ViewModeWidget(),
+        body: CategoryMode(), //ViewModeWidget(),
       ),
     );
   }
