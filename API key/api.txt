@@ -1,0 +1,5 @@
+APP NAME - Art Gallery
+KEYSTRING - g9wufy3n0pt61fay41slimq0
+SHARED SECRET - wpqv0a2ofs
+SERVICE	PUBLIC RATE LIMITS	OAUTH RATE LIMITS (PER USER)	STATUS
+Production API	5 per sec.	5,000 per day	Disabled	Personal Access
