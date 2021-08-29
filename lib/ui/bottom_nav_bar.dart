@@ -26,12 +26,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
         items: [
           _bottomNavBarItem(
             'View Mode',
-            Icon(Icons.grid_view_outlined),
+            Icon(Icons.grid_view_sharp),
           ),
-          _bottomNavBarItem(
-            'Artor',
-            Icon(Icons.face_retouching_natural),
-          ),
+          // _bottomNavBarItem(
+          //   'Artor',
+          //   Icon(Icons.face_retouching_natural),
+          // ),
           _bottomNavBarItem(
             'Data Edit',
             Icon(Icons.mode_edit),

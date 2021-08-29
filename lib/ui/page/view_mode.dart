@@ -1,5 +1,3 @@
-import '../../util/screen_size_util.dart';
-
 import '../../controller/category_list_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -7,9 +5,14 @@ import '../../controller/bottom_nav_bar_controller.dart';
 import '../../ui/common_widget/common_widget.dart';
 import 'package:flutter/material.dart';
 
-class ViewModeWidget extends StatelessWidget {
+class ViewModeWidget extends StatefulWidget {
   ViewModeWidget({Key? key}) : super(key: key);
 
+  @override
+  _ViewModeWidgetState createState() => _ViewModeWidgetState();
+}
+
+class _ViewModeWidgetState extends State<ViewModeWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,15 +31,19 @@ class ViewModeWidget extends StatelessWidget {
             sizeBoxBetweenColumnCells,
             Text(
               'Popular Art',
-              style: categoryHeaderLstStyle(categoryColor!),
+              style: categoryHeaderLstStyle(
+                categoryColor!,
+                FontWeight.normal,
+                fontSize17,
+              ),
             ),
             _popularArtList,
             sizeBoxBetweenColumnCells,
-            Text(
-              'Popular Artist',
-              style: categoryHeaderLstStyle(categoryColor!),
-            ),
-            _popularPainterList(context),
+            // Text(
+            //   'Popular Artist',
+            //   style: categoryHeaderLstStyle(categoryColor!),
+            // ),
+            // _popularPainterList(context),
           ],
         ),
       );
@@ -48,7 +55,7 @@ class ViewModeWidget extends StatelessWidget {
             padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
-            itemCount: categoryLst.length,
+            itemCount: catController.categoryLst.length,
             itemBuilder: (BuildContext context, int index) => Center(
               child: GestureDetector(
                 onTap: () {
@@ -56,10 +63,14 @@ class ViewModeWidget extends StatelessWidget {
                   // catController.selectedColor = Colors.black;
                 },
                 child: Text(
-                  '${categoryLst[index]}',
-                  style: categoryHeaderLstStyle(catController.index == index
-                      ? categoryColor!
-                      : unSelectedColor!),
+                  '${catController.categoryLst[index].categoryName}',
+                  style: categoryHeaderLstStyle(
+                    catController.index == index
+                        ? categoryColor!
+                        : unSelectedColor!,
+                    FontWeight.normal,
+                    fontSize17,
+                  ),
                 ),
               ),
             ),
@@ -72,7 +83,37 @@ class ViewModeWidget extends StatelessWidget {
 
   get _galleryList => SizedBox(
         height: 180,
-        child: ListView.separated(
+        child: Consumer<CategoryListController>(
+          builder: (context, catController, _) => ListView.separated(
+            padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: galleryLst.length,
+            itemBuilder: (BuildContext context, int index) => Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child:
+                    //  Text(catController.photoLstByCatID.length.toString()),
+                    Image.asset(
+                  galleryLst[index],
+                  fit: BoxFit.cover,
+                  height: 180,
+                  width: 120,
+                ),
+              ),
+            ),
+            separatorBuilder: (BuildContext context, int index) => SizedBox(
+              width: 22,
+            ),
+          ),
+        ),
+      );
+}
+
+get _popularArtList => SizedBox(
+      height: 100,
+      child: Consumer<CategoryListController>(
+        builder: (context, catController, _) => ListView.separated(
           padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
@@ -83,8 +124,8 @@ class ViewModeWidget extends StatelessWidget {
               child: Image.asset(
                 galleryLst[index],
                 fit: BoxFit.cover,
-                height: 180,
-                width: 120,
+                height: 100,
+                width: 110,
               ),
             ),
           ),
@@ -92,96 +133,72 @@ class ViewModeWidget extends StatelessWidget {
             width: 22,
           ),
         ),
-      );
-}
-
-get _popularArtList => SizedBox(
-      height: 100,
-      child: ListView.separated(
-        padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: galleryLst.length,
-        itemBuilder: (BuildContext context, int index) => Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              galleryLst[index],
-              fit: BoxFit.cover,
-              height: 100,
-              width: 110,
-            ),
-          ),
-        ),
-        separatorBuilder: (BuildContext context, int index) => SizedBox(
-          width: 22,
-        ),
       ),
     );
 
-Widget _popularPainterList(BuildContext context) => SizedBox(
-      width: (ScreenSizeUtil.screenWidth(context) - (viewModePadding * 2)),
-      child: SingleChildScrollView(
-        child: ListView.separated(
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.only(top: 5, bottom: 5),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: galleryLst.length,
-          itemBuilder: (BuildContext context, int index) => Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Stack(
-                clipBehavior: Clip.hardEdge,
-                // fit: StackFit.loose,
-                alignment: AlignmentDirectional.centerStart,
-                children: [
-                  Container(
-                    height: 80,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.yellow[700]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            'assets/image/codelab.png',
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        sizeBoxBetweenRowCells,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Martha Barnett',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              'Painter',
-                              style: TextStyle(fontSize: 14),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          separatorBuilder: (BuildContext context, int index) => SizedBox(
-            height: 22,
-          ),
-        ),
-      ),
-    );
+// Widget _popularPainterList(BuildContext context) => SizedBox(
+//       width: (ScreenSizeUtil.screenWidth(context) - (viewModePadding * 2)),
+//       child: SingleChildScrollView(
+//         child: ListView.separated(
+//           physics: NeverScrollableScrollPhysics(),
+//           padding: EdgeInsets.only(top: 5, bottom: 5),
+//           shrinkWrap: true,
+//           scrollDirection: Axis.vertical,
+//           itemCount: galleryLst.length,
+//           itemBuilder: (BuildContext context, int index) => Center(
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(10),
+//               child: Stack(
+//                 clipBehavior: Clip.hardEdge,
+//                 // fit: StackFit.loose,
+//                 alignment: AlignmentDirectional.centerStart,
+//                 children: [
+//                   Container(
+//                     height: 80,
+//                     decoration: BoxDecoration(
+//                         borderRadius: BorderRadius.circular(5),
+//                         color: Colors.yellow[700]),
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.only(left: 10),
+//                     child: Row(
+//                       children: [
+//                         ClipRRect(
+//                           borderRadius: BorderRadius.circular(15),
+//                           child: Image.asset(
+//                             'assets/image/codelab.png',
+//                             width: 60,
+//                             height: 60,
+//                             fit: BoxFit.fill,
+//                           ),
+//                         ),
+//                         sizeBoxBetweenRowCells,
+//                         Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Text(
+//                               'Martha Barnett',
+//                               style: TextStyle(fontSize: 18),
+//                             ),
+//                             SizedBox(
+//                               height: 3,
+//                             ),
+//                             Text(
+//                               'Painter',
+//                               style: TextStyle(fontSize: 14),
+//                             )
+//                           ],
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           separatorBuilder: (BuildContext context, int index) => SizedBox(
+//             height: 22,
+//           ),
+//         ),
+//       ),
+//     );
