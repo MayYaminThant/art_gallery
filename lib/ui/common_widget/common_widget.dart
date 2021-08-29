@@ -37,7 +37,7 @@ TextStyle photoViewTitleStyle() {
   return GoogleFonts.dmSerifDisplay(
     fontWeight: FontWeight.w700,
     color: Colors.white,
-    fontSize: 50,
+    fontSize: 30,
   );
 }
 

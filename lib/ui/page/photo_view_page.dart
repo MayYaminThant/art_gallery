@@ -1,3 +1,5 @@
+import 'package:art_gallery/util/screen_size_util.dart';
+
 import '../../controller/photo_detail_controller.dart';
 import '../../controller/category_list_controller.dart';
 import '../../ui/menu/common_container_ceter_to_right.dart';
@@ -26,7 +28,7 @@ class _PhotoViewState extends State<PhotoDetailView> {
     return SafeArea(
       child: Scaffold(
         appBar: appBar(),
-        extendBodyBehindAppBar: true,
+        // extendBodyBehindAppBar: true,
         key: PhotoDetailView.scaffoldKey,
         body: body(context),
       ),
@@ -36,7 +38,7 @@ class _PhotoViewState extends State<PhotoDetailView> {
   AppBar appBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black.withOpacity(0.5),
       leading: Consumer<CategoryListController>(
         builder: (context, catController, _) => IconButton(
           onPressed: () {
@@ -71,17 +73,10 @@ class _PhotoViewState extends State<PhotoDetailView> {
           builder: (BuildContext bContex, catController, _) =>
               catController.photo.photoUrl != '0'
                   ? CachedNetworkImage(
+                      fit: BoxFit.contain,
+                      width: ScreenSizeUtil.screenWidth(context),
                       imageUrl: catController.photo.photoUrl,
                       cacheKey: catController.photo.photoId,
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                  Colors.red, BlendMode.colorBurn)),
-                        ),
-                      ),
                       placeholder: (context, url) =>
                           CircularProgressIndicator(),
                       errorWidget: (context, url, error) => Icon(Icons.error),

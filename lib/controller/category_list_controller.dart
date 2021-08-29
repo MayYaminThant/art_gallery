@@ -76,7 +76,7 @@ class CategoryListController with ChangeNotifier {
     notifyListeners();
     FirebaseFirestore.instance
         .collection('photo')
-        .orderBy('created_date')
+        .orderBy("created_date", descending: true)
         .get()
         .then((QuerySnapshot snapshot) {
       _photoLst = [];

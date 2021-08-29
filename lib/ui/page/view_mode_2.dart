@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+
 import '../../controller/category_list_controller.dart';
 import '../../ui/page/photo_view_page.dart';
 import '../../ui/common_widget/common_widget.dart';
@@ -107,16 +109,23 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: catController
-                                      .photoLstByCatID[index].photoUrl !=
-                                  '0'
-                              ? Image.network(
-                                  catController.photoLstByCatID[index].photoUrl,
-                                  fit: BoxFit.cover,
-                                  height: 280,
-                                  width: 160,
-                                )
-                              : SizedBox(),
+                          child:
+                              catController.photoLstByCatID[index].photoUrl !=
+                                      '0'
+                                  ? CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      height: 280,
+                                      width: 160,
+                                      imageUrl: catController
+                                          .photoLstByCatID[index].photoUrl,
+                                      cacheKey: catController
+                                          .photoLstByCatID[index].photoId,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    )
+                                  : SizedBox(),
                         ),
                       ),
                     ),
@@ -169,11 +178,18 @@ get _popularArtList => Consumer<CategoryListController>(
                       //   bottomLeft: Radius.circular(6),
                       // ),
                       child: catController.filterPhotoLst[index].photoUrl != '0'
-                          ? Image.network(
-                              catController.filterPhotoLst[index].photoUrl,
+                          ? CachedNetworkImage(
                               fit: BoxFit.cover,
                               height: 115,
                               width: 130,
+                              imageUrl:
+                                  catController.filterPhotoLst[index].photoUrl,
+                              cacheKey:
+                                  catController.filterPhotoLst[index].photoId,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             )
                           : SizedBox(),
                     ),
