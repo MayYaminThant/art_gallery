@@ -1,22 +1,26 @@
 import '../../controller/category_list_controller.dart';
-import 'package:provider/provider.dart';
-
-import '../../controller/bottom_nav_bar_controller.dart';
+import '../../ui/page/photo_view_page.dart';
 import '../../ui/common_widget/common_widget.dart';
-import 'package:flutter/material.dart';
 
-class ViewModeWidget extends StatefulWidget {
-  ViewModeWidget({Key? key}) : super(key: key);
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+class ViewModeWidget2 extends StatefulWidget {
+  ViewModeWidget2({Key? key}) : super(key: key);
 
   @override
   _ViewModeWidgetState createState() => _ViewModeWidgetState();
 }
 
-class _ViewModeWidgetState extends State<ViewModeWidget> {
+class _ViewModeWidgetState extends State<ViewModeWidget2> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: viewModePadding),
+      padding: EdgeInsets.only(
+        left: 0, // viewModePadding,
+      ),
       child: _artList(context),
     );
   }
@@ -30,175 +34,248 @@ class _ViewModeWidgetState extends State<ViewModeWidget> {
             _galleryList,
             sizeBoxBetweenColumnCells,
             Text(
-              'Popular Art',
-              style: categoryHeaderLstStyle(
-                categoryColor!,
-                FontWeight.normal,
-                fontSize17,
-              ),
+              'Latest',
+              style: appTitleStyle(),
             ),
             _popularArtList,
             sizeBoxBetweenColumnCells,
-            // Text(
-            //   'Popular Artist',
-            //   style: categoryHeaderLstStyle(categoryColor!),
-            // ),
-            // _popularPainterList(context),
           ],
         ),
       );
 
-  get _categoryList => SizedBox(
-        height: 35,
-        child: Consumer<CategoryListController>(
-          builder: (context, catController, _) => ListView.separated(
-            padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: catController.categoryLst.length,
-            itemBuilder: (BuildContext context, int index) => Center(
-              child: GestureDetector(
-                onTap: () {
-                  catController.index = index;
-                  // catController.selectedColor = Colors.black;
-                },
-                child: Text(
-                  '${catController.categoryLst[index].categoryName}',
-                  style: categoryHeaderLstStyle(
-                    catController.index == index
-                        ? categoryColor!
-                        : unSelectedColor!,
-                    FontWeight.normal,
-                    fontSize17,
+  get _categoryList =>
+      Consumer<CategoryListController>(builder: (context, catController, _) {
+        return catController.searchTerm.isEmpty
+            ? SizedBox(
+                height: 35,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(
+                      right: viewModePadding, top: 5, bottom: 5),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: catController.categoryLst.length,
+                  itemBuilder: (BuildContext context, int index) => Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        catController.index = index;
+                      },
+                      child: Text(
+                        '${catController.categoryLst[index].categoryName}',
+                        style: categoryHeaderLstStyle(
+                          catController.index == index
+                              ? categoryColor!
+                              : unSelectedColor!,
+                          catController.index == index
+                              ? FontWeight.w700
+                              : FontWeight.w100,
+                          catController.index == index
+                              ? categoryHeaderSelectedFontSize
+                              : categoryHeaderDefaultFontSize,
+                        ),
+                      ),
+                    ),
+                  ),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(
+                    width: 15,
                   ),
                 ),
-              ),
-            ),
-            separatorBuilder: (BuildContext context, int index) => SizedBox(
-              width: 15,
-            ),
-          ),
-        ),
-      );
+              )
+            : SizedBox();
+      });
 
-  get _galleryList => SizedBox(
-        height: 180,
-        child: Consumer<CategoryListController>(
-          builder: (context, catController, _) => ListView.separated(
-            padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: galleryLst.length,
-            itemBuilder: (BuildContext context, int index) => Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child:
-                    //  Text(catController.photoLstByCatID.length.toString()),
-                    Image.asset(
-                  galleryLst[index],
-                  fit: BoxFit.cover,
-                  height: 180,
-                  width: 120,
-                ),
-              ),
-            ),
-            separatorBuilder: (BuildContext context, int index) => SizedBox(
-              width: 22,
-            ),
-          ),
-        ),
+  get _galleryList => Consumer<CategoryListController>(
+        builder: (context, catController, _) {
+          return catController.searchTerm.isEmpty
+              ? SizedBox(
+                  height: 300,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(
+                        right: viewModePadding, top: 5, bottom: 5),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: catController.photoLstByCatID.length,
+                    itemBuilder: (BuildContext context, int index) => Center(
+                      child: InkWell(
+                        onTap: () async {
+                          catController.photo =
+                              catController.photoLstByCatID[index];
+
+                          await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PhotoDetailView();
+                          }));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child:
+                              catController.photoLstByCatID[index].photoUrl !=
+                                      '0'
+                                  ? CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      height: 280,
+                                      width: 160,
+                                      imageUrl: catController
+                                          .photoLstByCatID[index].photoUrl,
+                                      cacheKey: catController
+                                          .photoLstByCatID[index].photoId,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    )
+                                  : SizedBox(),
+                        ),
+                      ),
+                    ),
+                    separatorBuilder: (BuildContext context, int index) =>
+                        SizedBox(
+                      width: 15,
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  height: 0,
+                );
+        },
       );
 }
 
-get _popularArtList => SizedBox(
-      height: 100,
-      child: Consumer<CategoryListController>(
-        builder: (context, catController, _) => ListView.separated(
-          padding: EdgeInsets.only(right: viewModePadding, top: 5, bottom: 5),
+get _popularArtList => Consumer<CategoryListController>(
+      builder: (context, catController, _) => SingleChildScrollView(
+        child: ListView.separated(
+          padding: EdgeInsets.only(right: padding25, top: 5, bottom: 5),
           shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: galleryLst.length,
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          itemCount: catController.filterPhotoLst.length,
           itemBuilder: (BuildContext context, int index) => Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                galleryLst[index],
-                fit: BoxFit.cover,
-                height: 100,
-                width: 110,
+            child: InkWell(
+              onTap: () async {
+                catController.photo = catController.filterPhotoLst[index];
+
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                  return PhotoDetailView();
+                }));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  gradient: LinearGradient(colors: [
+                    Colors.white10,
+                    Colors.grey.shade200,
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                ),
+                height: 115,
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: catController.filterPhotoLst[index].photoUrl != '0'
+                          ? CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              height: 115,
+                              width: 130,
+                              imageUrl:
+                                  catController.filterPhotoLst[index].photoUrl,
+                              cacheKey:
+                                  catController.filterPhotoLst[index].photoId,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            )
+                          : SizedBox(),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              catController.filterPhotoLst[index].photoName,
+                              style: categoryHeaderLstStyle(
+                                popularTitleColor,
+                                FontWeight.w800,
+                                categoryHeaderDefaultFontSize,
+                              ),
+                            ),
+                            SizedBox(
+                              child: Text(
+                                catController
+                                    .filterPhotoLst[index].categoryName,
+                                overflow: TextOverflow.ellipsis,
+                                style: categoryHeaderLstStyle(
+                                  black26,
+                                  FontWeight.bold,
+                                  fontSize14,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              child: Text(
+                                'Origin emerge special everyday romative',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: categoryHeaderLstStyle(
+                                  black26,
+                                  FontWeight.bold,
+                                  11,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            RatingBar.builder(
+                              initialRating: 4.5,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 15,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 1.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              unratedColor: black12,
+                              onRatingUpdate: (rating) {},
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 6.0, bottom: 6.0, right: 8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            '\$' +
+                                catController.filterPhotoLst[index].price!
+                                    .toStringAsFixed(0),
+                            style: categoryHeaderLstStyle(
+                              popularTitleColor,
+                              FontWeight.w600,
+                              categoryPriceDefaultFontSize,
+                            ),
+                          ),
+                          SizedBox(height: popularArtCardLstHeaderSize),
+                          SizedBox(height: popularArtCardLstHeaderSize),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
           separatorBuilder: (BuildContext context, int index) => SizedBox(
-            width: 22,
+            height: 10,
           ),
         ),
       ),
     );
-
-// Widget _popularPainterList(BuildContext context) => SizedBox(
-//       width: (ScreenSizeUtil.screenWidth(context) - (viewModePadding * 2)),
-//       child: SingleChildScrollView(
-//         child: ListView.separated(
-//           physics: NeverScrollableScrollPhysics(),
-//           padding: EdgeInsets.only(top: 5, bottom: 5),
-//           shrinkWrap: true,
-//           scrollDirection: Axis.vertical,
-//           itemCount: galleryLst.length,
-//           itemBuilder: (BuildContext context, int index) => Center(
-//             child: ClipRRect(
-//               borderRadius: BorderRadius.circular(10),
-//               child: Stack(
-//                 clipBehavior: Clip.hardEdge,
-//                 // fit: StackFit.loose,
-//                 alignment: AlignmentDirectional.centerStart,
-//                 children: [
-//                   Container(
-//                     height: 80,
-//                     decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(5),
-//                         color: Colors.yellow[700]),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.only(left: 10),
-//                     child: Row(
-//                       children: [
-//                         ClipRRect(
-//                           borderRadius: BorderRadius.circular(15),
-//                           child: Image.asset(
-//                             'assets/image/codelab.png',
-//                             width: 60,
-//                             height: 60,
-//                             fit: BoxFit.fill,
-//                           ),
-//                         ),
-//                         sizeBoxBetweenRowCells,
-//                         Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text(
-//                               'Martha Barnett',
-//                               style: TextStyle(fontSize: 18),
-//                             ),
-//                             SizedBox(
-//                               height: 3,
-//                             ),
-//                             Text(
-//                               'Painter',
-//                               style: TextStyle(fontSize: 14),
-//                             )
-//                           ],
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           separatorBuilder: (BuildContext context, int index) => SizedBox(
-//             height: 22,
-//           ),
-//         ),
-//       ),
-//     );

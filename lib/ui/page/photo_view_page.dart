@@ -1,11 +1,11 @@
-import 'package:art_gallery/util/screen_size_util.dart';
-
 import '../../controller/photo_detail_controller.dart';
 import '../../controller/category_list_controller.dart';
 import '../../ui/menu/common_container_ceter_to_right.dart';
 import '../../ui/page/photo_view_widget.dart';
 import '../../ui/common_widget/common_widget.dart';
 import '../../util/common_util.dart';
+import '../../util/screen_size_util.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,7 +28,6 @@ class _PhotoViewState extends State<PhotoDetailView> {
     return SafeArea(
       child: Scaffold(
         appBar: appBar(),
-        // extendBodyBehindAppBar: true,
         key: PhotoDetailView.scaffoldKey,
         body: body(context),
       ),
@@ -47,7 +46,7 @@ class _PhotoViewState extends State<PhotoDetailView> {
           },
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white, //Colors.white,
+            color: Colors.white,
           ),
         ),
       ),

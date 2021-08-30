@@ -1,15 +1,12 @@
-import 'package:art_gallery/controller/photo_detail_controller.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:google_fonts/google_fonts.dart';
-// import 'package:photo_view/photo_view.dart';
-
-import '../controller/bottom_nav_bar_controller.dart';
+import '../controller/photo_detail_controller.dart';
 import '../controller/category_list_controller.dart';
 import '../ui/common_widget/common_widget.dart';
 import '../ui/page/main_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,9 +21,6 @@ class MyAppProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => BottomNavBarController(0),
-        ),
         ChangeNotifierProvider(
           create: (_) => CategoryListController(-1, categoryColor!, false, ''),
         ),

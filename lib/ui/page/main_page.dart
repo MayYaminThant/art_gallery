@@ -1,19 +1,10 @@
 import '../../controller/category_list_controller.dart';
+import '../../ui/page/view_mode.dart';
 import '../../ui/common_widget/common_widget.dart';
-import '../../ui/page/view_mode_2.dart';
-import '../../ui/page/category_mode.dart';
 import '../../util/common_util.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-// import '../bottom_nav_bar.dart';
-
-final bottomNavs = [
-  ViewModeWidget2(),
-  // ArtEditMode(),
-  CategoryMode(),
-];
 
 class MyMainPage extends StatefulWidget {
   const MyMainPage({Key? key}) : super(key: key);
@@ -41,9 +32,6 @@ class _MyMainPageState extends State<MyMainPage> {
     return SafeArea(
       child: Scaffold(
         key: MyMainPage.scaffoldKey,
-        // appBar: customAppBar(context, title, scaffoldKey),
-        // drawer: MainDrawer(),
-        // bottomNavigationBar: BottomNavBar(),
         body: body(context),
       ),
     );
@@ -55,7 +43,6 @@ class _MyMainPageState extends State<MyMainPage> {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          // border: Border.all(color: Colors.black12),
           borderRadius: BorderRadius.circular(8),
           color: Colors.grey.shade300,
         ),
@@ -133,20 +120,5 @@ class _MyMainPageState extends State<MyMainPage> {
         ),
       ),
     );
-
-    // return CommonBackgroundWithPainter(
-    //   padding: EdgeInsets.only(left: padding25, right: 0, top: 8, bottom: 8),
-    //   // stackFirstChildHeight: 175,
-    //   // stackFirstChild: CustomPaint(
-    //   //   painter: CurvePainter(),
-    //   // ),
-    //   children: [
-    //     Text(appTitle, style: appTitleStyle()),
-    //     SizedBox(height: 15),
-    //     searchBox(() {}),
-    //     SizedBox(height: 30),
-    //     ViewModeWidget2(),
-    //   ],
-    // );
   }
 }

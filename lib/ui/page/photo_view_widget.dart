@@ -1,10 +1,9 @@
-import 'dart:ui';
-
-import 'package:art_gallery/controller/photo_detail_controller.dart';
-
+import '../../controller/photo_detail_controller.dart';
 import '../../controller/category_list_controller.dart';
 import '../../ui/common_widget/common_widget.dart';
 import '../../util/screen_size_util.dart';
+
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,19 +14,17 @@ class PhotoViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PhotoDetailController>(
       builder: (BuildContext bContext, detailController, _) => GestureDetector(
-            onTap: () {
-              detailController.isShowDetail = !detailController.isShowDetail;
-            },
+        onTap: () {
+          detailController.isShowDetail = !detailController.isShowDetail;
+        },
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
           child: Card(
             elevation: 2,
             color: Colors.black.withOpacity(0.5),
             child: Container(
-              // height: ((_height / 3) * 2),
               width: 300,
               height: 200,
-              // width: ScreenSizeUtil.screenWidth(context),
               decoration: BoxDecoration(
                 // color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -39,7 +36,6 @@ class PhotoViewWidget extends StatelessWidget {
                 padding: EdgeInsets.all(20),
                 child: Consumer<CategoryListController>(
                   builder: (BuildContext bContex, catController, _) => Column(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _showValue(context, 'Category Name',
                           catController.photo.categoryName),

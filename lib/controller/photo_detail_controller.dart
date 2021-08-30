@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class PhotoDetailController with ChangeNotifier {
   PhotoDetailController(this._isShowDetail);
