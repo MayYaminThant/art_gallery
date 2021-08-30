@@ -33,7 +33,7 @@ class CategoryListController with ChangeNotifier {
     if (_searchTerm == searchTerm) return;
 
     _searchTerm = searchTerm;
-    setFilterPhotoLst = _searchTerm;
+    setFilterPhotoLst();
 
     notifyListeners();
   }
@@ -93,7 +93,7 @@ class CategoryListController with ChangeNotifier {
             orElse: () => newPhoto);
         if (existingItem.isEqual(newPhoto)) {
           _photoLst.add(item);
-          _filterPhotoLst.add(item);
+          setFilterPhotoLst();
         }
         notifyListeners();
       });
@@ -206,8 +206,7 @@ class CategoryListController with ChangeNotifier {
     notifyListeners();
   }
 
-  set setFilterPhotoLst(String searchTerm) {
-    searchTerm = searchTerm.toLowerCase();
+  setFilterPhotoLst() {
     if (searchTerm.isEmpty) {
       _filterPhotoLst = _photoLst;
       notifyListeners();
@@ -215,8 +214,10 @@ class CategoryListController with ChangeNotifier {
       _filterPhotoLst = [];
       notifyListeners();
       for (Photo item in photoLst) {
-        if (item.photoName.toLowerCase().contains(searchTerm) ||
-            item.categoryName.toLowerCase().contains(searchTerm)) {
+        if (item.photoName.toLowerCase().contains(searchTerm.toLowerCase()) ||
+            item.categoryName
+                .toLowerCase()
+                .contains(searchTerm.toLowerCase())) {
           _filterPhotoLst.add(item);
         }
       }

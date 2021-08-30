@@ -1,5 +1,4 @@
 import '../../controller/category_list_controller.dart';
-import '../../ui/menu/common_background_with_painter.dart';
 import '../../ui/common_widget/common_widget.dart';
 import '../../ui/page/view_mode_2.dart';
 import '../../ui/page/category_mode.dart';
@@ -16,27 +15,6 @@ final bottomNavs = [
   CategoryMode(),
 ];
 
-// class MyMainPage extends StatelessWidget {
-//   const MyMainPage({Key? key, required this.title}) : super(key: key);
-//   final String title;
-//   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         key: scaffoldKey,
-//         appBar: customAppBar(context, title, scaffoldKey),
-//         drawer: MainDrawer(),
-//         bottomNavigationBar: BottomNavBar(),
-//         body: Consumer<BottomNavBarController>(
-//           builder: (BuildContext buildContext, controller, _) =>
-//               bottomNavs[controller.index],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class MyMainPage extends StatefulWidget {
   const MyMainPage({Key? key}) : super(key: key);
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
@@ -47,6 +25,12 @@ class MyMainPage extends StatefulWidget {
 
 class _MyMainPageState extends State<MyMainPage> {
   final _textController = TextEditingController();
+
+  Future<Null> _refreshCallback() async {
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {});
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,19 +106,47 @@ class _MyMainPageState extends State<MyMainPage> {
   }
 
   body(context) {
-    return CommonBackgroundWithPainter(
-      padding: EdgeInsets.only(left: padding25, right: 0, top: 8, bottom: 8),
-      // stackFirstChildHeight: 175,
-      // stackFirstChild: CustomPaint(
-      //   painter: CurvePainter(),
-      // ),
-      children: [
-        Text(appTitle, style: appTitleStyle()),
-        SizedBox(height: 15),
-        searchBox(() {}),
-        SizedBox(height: 30),
-        ViewModeWidget2(),
-      ],
+    return Container(
+      color: Colors.transparent,
+      child: RefreshIndicator(
+        onRefresh: _refreshCallback,
+        backgroundColor: grey800,
+        color: Colors.white12,
+        displacement: 165,
+        strokeWidth: 3,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding:
+                EdgeInsets.only(left: padding25, right: 0, top: 8, bottom: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(appTitle, style: appTitleStyle()),
+                SizedBox(height: 15),
+                searchBox(() {}),
+                SizedBox(height: 30),
+                ViewModeWidget2(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+
+    // return CommonBackgroundWithPainter(
+    //   padding: EdgeInsets.only(left: padding25, right: 0, top: 8, bottom: 8),
+    //   // stackFirstChildHeight: 175,
+    //   // stackFirstChild: CustomPaint(
+    //   //   painter: CurvePainter(),
+    //   // ),
+    //   children: [
+    //     Text(appTitle, style: appTitleStyle()),
+    //     SizedBox(height: 15),
+    //     searchBox(() {}),
+    //     SizedBox(height: 30),
+    //     ViewModeWidget2(),
+    //   ],
+    // );
   }
 }
