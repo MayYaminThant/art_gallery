@@ -24,32 +24,13 @@ class PhotoViewWidget extends StatelessWidget {
             color: Colors.black.withOpacity(0.5),
             child: Container(
               width: 300,
-              height: 200,
+              height: 300,
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Consumer<CategoryListController>(
                   builder: (BuildContext bContex, catController, _) => Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _showValue(context, 'Category',
-                          catController.photo.categoryName),
-                      _showValue(context, 'Painter',
-                          catController.photo.userName),
-                      _showValue(
-                          context,
-                          'Created Date',
-                          catController.photo.createdDate == null
-                              ? ''
-                              : catController.photo.createdDate!),
-                      _showValue(
-                          context,
-                          'Modified Date',
-                          catController.photo.createdDate == null
-                              ? ''
-                              : catController.photo.modifiedDate!),
-                      _showValue(context, 'Price',
-                          '\$' + catController.photo.price.toString()),
-                    ],
+                    children: children(context, catController),
                   ),
                 ),
               ),
@@ -60,7 +41,55 @@ class PhotoViewWidget extends StatelessWidget {
     );
   }
 
+  List<Widget> children(
+      BuildContext context, CategoryListController catController) {
+    return [
+      _showValue(context, 'Category', catController.photo.categoryName),
+      _showValue(context, 'Painter', catController.photo.userName),
+      _showRating(context, 'Rating', catController.photo.rating),
+      _showValue(context, 'Description', catController.photo.photoDescription),
+      _showValue(
+          context,
+          'Created Date',
+          catController.photo.createdDate == null
+              ? ''
+              : catController.photo.createdDate!),
+      _showValue(
+          context,
+          'Modified Date',
+          catController.photo.createdDate == null
+              ? ''
+              : catController.photo.modifiedDate!),
+      _showValue(
+        context,
+        'Price',
+        '\$' + catController.photo.price!.toStringAsFixed(0),
+      ),
+    ];
+  }
+
   _showValue(context, String key, String value) {
+    double thirdOfWidth = ScreenSizeUtil.screenWidth(context) / 3;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          width: thirdOfWidth - 40,
+          child: Text(key,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: fontSize17)),
+        ),
+        Text(value,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            style: TextStyle(color: Colors.white, fontSize: fontSize14)),
+      ],
+    );
+  }
+
+  _showRating(context, String key, double value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -72,8 +101,7 @@ class PhotoViewWidget extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   fontSize: fontSize17)),
         ),
-        Text(value,
-            style: TextStyle(color: Colors.white, fontSize: fontSize14)),
+        ratingBar(value, Colors.white30),
       ],
     );
   }

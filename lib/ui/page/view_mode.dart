@@ -4,7 +4,6 @@ import '../../ui/common_widget/common_widget.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ViewModeWidget2 extends StatefulWidget {
@@ -76,9 +75,7 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
                     ),
                   ),
                   separatorBuilder: (BuildContext context, int index) =>
-                      SizedBox(
-                    width: 15,
-                  ),
+                      sizeBoxForCatListSeparate,
                 ),
               )
             : SizedBox();
@@ -97,15 +94,8 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
                     itemCount: catController.photoLstByCatID.length,
                     itemBuilder: (BuildContext context, int index) => Center(
                       child: InkWell(
-                        onTap: () async {
-                          catController.photo =
-                              catController.photoLstByCatID[index];
-
-                          await Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return PhotoDetailView();
-                          }));
-                        },
+                        onTap:
+                            gestureTapCallback(context, catController, index),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child:
@@ -129,14 +119,10 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
                       ),
                     ),
                     separatorBuilder: (BuildContext context, int index) =>
-                        SizedBox(
-                      width: 15,
-                    ),
+                        sizeBoxForCatListSeparate,
                   ),
                 )
-              : SizedBox(
-                  height: 0,
-                );
+              : SizedBox();
         },
       );
 }
@@ -151,131 +137,113 @@ get _popularArtList => Consumer<CategoryListController>(
           itemCount: catController.filterPhotoLst.length,
           itemBuilder: (BuildContext context, int index) => Center(
             child: InkWell(
-              onTap: () async {
-                catController.photo = catController.filterPhotoLst[index];
-
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                  return PhotoDetailView();
-                }));
-              },
+              onTap: gestureTapCallback(context, catController, index),
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  gradient: LinearGradient(colors: [
-                    Colors.white10,
-                    Colors.grey.shade200,
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
+                decoration: artBoxDecoration(),
                 height: 115,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: catController.filterPhotoLst[index].photoUrl != '0'
-                          ? CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              height: 115,
-                              width: 130,
-                              imageUrl:
-                                  catController.filterPhotoLst[index].photoUrl,
-                              cacheKey:
-                                  catController.filterPhotoLst[index].photoId,
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            )
+                          ? cachedNetworkImage(catController, index)
                           : SizedBox(),
                     ),
                     SizedBox(width: 10),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              catController.filterPhotoLst[index].photoName,
-                              style: categoryHeaderLstStyle(
-                                popularTitleColor,
-                                FontWeight.w800,
-                                categoryHeaderDefaultFontSize,
-                              ),
-                            ),
-                            SizedBox(
-                              child: Text(
-                                catController
-                                    .filterPhotoLst[index].categoryName,
-                                overflow: TextOverflow.ellipsis,
-                                style: categoryHeaderLstStyle(
-                                  black26,
-                                  FontWeight.bold,
-                                  fontSize14,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Text(
-                                'Origin emerge special everyday romative',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: categoryHeaderLstStyle(
-                                  black26,
-                                  FontWeight.bold,
-                                  11,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            RatingBar.builder(
-                              initialRating: 4.5,
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemSize: 15,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 1.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              unratedColor: black12,
-                              onRatingUpdate: (rating) {},
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                    artMiddleBody(catController, index),
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 6.0, bottom: 6.0, right: 8.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            '\$' +
-                                catController.filterPhotoLst[index].price!
-                                    .toStringAsFixed(0),
-                            style: categoryHeaderLstStyle(
-                              popularTitleColor,
-                              FontWeight.w600,
-                              categoryPriceDefaultFontSize,
-                            ),
-                          ),
-                          SizedBox(height: popularArtCardLstHeaderSize),
-                          SizedBox(height: popularArtCardLstHeaderSize),
-                        ],
-                      ),
+                      child: artText(
+                          '\$' +
+                              catController.filterPhotoLst[index].price!
+                                  .toStringAsFixed(0),
+                          popularTitleColor,
+                          1,
+                          FontWeight.w600,
+                          categoryPriceDefaultFontSize),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          separatorBuilder: (BuildContext context, int index) => SizedBox(
-            height: 10,
-          ),
+          separatorBuilder: (BuildContext context, int index) =>
+              sizeBoxBetweenColumnCells,
         ),
       ),
     );
+
+Expanded artMiddleBody(CategoryListController catController, int index) {
+  return Expanded(
+    child: Padding(
+      padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          artText(
+              catController.filterPhotoLst[index].photoName,
+              popularTitleColor,
+              2,
+              FontWeight.w800,
+              categoryHeaderDefaultFontSize),
+          artText(catController.filterPhotoLst[index].categoryName, black26, 2,
+              FontWeight.bold, fontSize14),
+          artText(catController.filterPhotoLst[index].photoDescription, black26,
+              2, FontWeight.bold, 11),
+          SizedBox(height: 10),
+          ratingBar(catController.filterPhotoLst[index].rating, black12),
+        ],
+      ),
+    ),
+  );
+}
+
+BoxDecoration artBoxDecoration() {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(6),
+    gradient: LinearGradient(colors: [
+      Colors.white10,
+      Colors.grey.shade200,
+    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+  );
+}
+
+CachedNetworkImage cachedNetworkImage(
+    CategoryListController catController, int index) {
+  return CachedNetworkImage(
+    fit: BoxFit.cover,
+    height: 115,
+    width: 130,
+    imageUrl: catController.filterPhotoLst[index].photoUrl,
+    cacheKey: catController.filterPhotoLst[index].photoId,
+    placeholder: (context, url) => CircularProgressIndicator(),
+    errorWidget: (context, url, error) => Icon(Icons.error),
+  );
+}
+
+Text artText(String text, Color? fontColor, int? maxLine,
+    FontWeight? fontWeight, double? fontSize) {
+  return Text(
+    text,
+    maxLines: maxLine!,
+    overflow: TextOverflow.ellipsis,
+    style: categoryHeaderLstStyle(
+      fontColor,
+      fontWeight,
+      fontSize,
+    ),
+  );
+}
+
+GestureTapCallback gestureTapCallback(
+    BuildContext context, CategoryListController catController, int index) {
+  return () async {
+    catController.photo = catController.filterPhotoLst[index];
+
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return PhotoDetailView();
+    }));
+  };
+}

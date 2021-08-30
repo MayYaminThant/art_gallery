@@ -25,6 +25,7 @@ class _PhotoViewState extends State<PhotoDetailView> {
       child: Scaffold(
         appBar: appBar(),
         body: body(context),
+        extendBodyBehindAppBar: true,
       ),
     );
   }
@@ -66,19 +67,23 @@ class _PhotoViewState extends State<PhotoDetailView> {
         body: Consumer<CategoryListController>(
           builder: (BuildContext bContex, catController, _) =>
               catController.photo.photoUrl != '0'
-                  ? CachedNetworkImage(
-                      fit: BoxFit.contain,
-                      width: ScreenSizeUtil.screenWidth(context),
-                      imageUrl: catController.photo.photoUrl,
-                      cacheKey: catController.photo.photoId,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    )
+                  ? cachedNetworkImage(context, catController)
                   : SizedBox(),
         ),
         child: PhotoViewWidget(),
       ),
+    );
+  }
+
+  CachedNetworkImage cachedNetworkImage(
+      BuildContext context, CategoryListController catController) {
+    return CachedNetworkImage(
+      fit: BoxFit.contain,
+      width: ScreenSizeUtil.screenWidth(context),
+      imageUrl: catController.photo.photoUrl,
+      cacheKey: catController.photo.photoId,
+      placeholder: (context, url) => CircularProgressIndicator(),
+      errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
 }

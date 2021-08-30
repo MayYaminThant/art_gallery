@@ -1,5 +1,6 @@
 import 'package:art_gallery/model/photo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 String get appTitle => 'Art Shop';
@@ -18,13 +19,37 @@ SizedBox get sizeBoxBetweenColumnCells {
   return SizedBox(height: 10);
 }
 
+SizedBox get sizeBoxForCatListSeparate {
+  return SizedBox(width: 15);
+}
+
 Photo get newPhoto => Photo(
     categoryId: '0',
     photoId: '0',
     photoName: '',
     photoUrl: '0',
     categoryName: '',
-    userName: '');
+    userName: '',
+    photoDescription: '',
+    rating: 0);
+
+RatingBar ratingBar(rating, unRatedClr) {
+  return RatingBar.builder(
+    initialRating: rating,
+    minRating: 1,
+    direction: Axis.horizontal,
+    allowHalfRating: true,
+    itemCount: 5,
+    itemSize: 15,
+    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+    itemBuilder: (context, _) => Icon(
+      Icons.star,
+      color: Colors.amber,
+    ),
+    unratedColor: unRatedClr,
+    onRatingUpdate: (rating) {},
+  );
+}
 
 TextStyle categoryHeaderLstStyle(
   Color? color,
@@ -32,7 +57,7 @@ TextStyle categoryHeaderLstStyle(
   double? fontSize,
 ) {
   return TextStyle(
-    color: color,
+    color: color!,
     fontSize: fontSize,
     fontWeight: fontWeight,
   );

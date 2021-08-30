@@ -213,6 +213,8 @@ class CategoryListController with ChangeNotifier {
       createdDate: createdDateFormat,
       modifiedDate: modifiedDateFormat,
       userName: userName(data['artist_id']),
+      photoDescription: data['photo_description'],
+      rating: double.parse(data['rate'].toString()),
     );
     return item;
   }
