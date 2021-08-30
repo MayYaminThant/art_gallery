@@ -25,35 +25,28 @@ class PhotoViewWidget extends StatelessWidget {
             child: Container(
               width: 300,
               height: 200,
-              decoration: BoxDecoration(
-                // color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
-              ),
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Consumer<CategoryListController>(
                   builder: (BuildContext bContex, catController, _) => Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _showValue(context, 'Category Name',
+                      _showValue(context, 'Category',
                           catController.photo.categoryName),
-                      sizeBoxBetweenColumnCells,
+                      _showValue(context, 'Painter',
+                          catController.photo.userName),
                       _showValue(
                           context,
                           'Created Date',
                           catController.photo.createdDate == null
                               ? ''
                               : catController.photo.createdDate!),
-                      sizeBoxBetweenColumnCells,
                       _showValue(
                           context,
                           'Modified Date',
                           catController.photo.createdDate == null
                               ? ''
                               : catController.photo.modifiedDate!),
-                      sizeBoxBetweenColumnCells,
                       _showValue(context, 'Price',
                           '\$' + catController.photo.price.toString()),
                     ],

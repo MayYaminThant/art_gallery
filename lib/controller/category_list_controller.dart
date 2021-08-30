@@ -1,3 +1,5 @@
+import 'package:art_gallery/model/user.dart';
+
 import '../ui/common_widget/common_widget.dart';
 import '../model/category.dart';
 import '../model/photo.dart';
@@ -24,6 +26,9 @@ class CategoryListController with ChangeNotifier {
 
   List<Category> _categoryLst = [];
   List<Category> get categoryLst => _categoryLst;
+
+  List<User> _userLst = [];
+  List<User> get userLst => _userLst;
 
   String _searchTerm;
 
@@ -70,6 +75,56 @@ class CategoryListController with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getUserData() async {
+    _userLst = [];
+    notifyListeners();
+    FirebaseFirestore.instance
+        .collection("user")
+        .orderBy("created_date", descending: true)
+        .get()
+        .then((QuerySnapshot snapshot) {
+      _userLst = [];
+      snapshot.docs.forEach((element) {
+        _userLst.add(
+          User(
+            userId: element.data()['user_id'],
+            userName: element.data()['user_name'],
+          ),
+        );
+      });
+      if (userLst.isNotEmpty) {
+        index = 0;
+      }
+      notifyListeners();
+    });
+    print(_userLst);
+  }
+
+  Future<void> getCategoryData() async {
+    _categoryLst = [];
+    notifyListeners();
+    FirebaseFirestore.instance
+        .collection('category')
+        .orderBy('created_date')
+        .get()
+        .then((QuerySnapshot snapshot) {
+      _categoryLst = [];
+      snapshot.docs.forEach((element) {
+        _categoryLst.add(
+          Category(
+            categoryId: element.data()['category_id'],
+            categoryName: element.data()['category_name'],
+          ),
+        );
+      });
+      if (categoryLst.isNotEmpty) {
+        index = 0;
+      }
+      notifyListeners();
+    });
+    print(_categoryLst);
+  }
+
   Future<void> getPhotoData() async {
     _photoLst = [];
     _filterPhotoLst = [];
@@ -98,6 +153,33 @@ class CategoryListController with ChangeNotifier {
         notifyListeners();
       });
       print(_photoLst);
+    });
+  }
+
+  Future<void> getPhotoDataByCatID() async {
+    _photoLstByCatID = [];
+    notifyListeners();
+    await FirebaseFirestore.instance
+        .collection('photo')
+        .where('category_id', isEqualTo: categoryLst[index].categoryId)
+        .get()
+        .then((QuerySnapshot snapshot) {
+      snapshot.docs.forEach((element) async {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child(element.data()['photo_url'].split('/').last);
+        // no need of the file extension, the name will do fine.
+        var url = await ref.getDownloadURL();
+        Photo item = await setPhotoData(element.data(), url);
+        var existingItem = _photoLstByCatID.firstWhere(
+            (itemToCheck) => item.isEqual(itemToCheck),
+            orElse: () => newPhoto);
+        if (existingItem.isEqual(newPhoto)) {
+          _photoLstByCatID.add(item);
+        }
+        notifyListeners();
+      });
+      print('Photo Length ${_photoLstByCatID.length}');
     });
   }
 
@@ -130,67 +212,24 @@ class CategoryListController with ChangeNotifier {
       categoryName: categoryName(data['category_id']),
       createdDate: createdDateFormat,
       modifiedDate: modifiedDateFormat,
-      artistId: data['artist_id'],
+      userName: userName(data['artist_id']),
     );
     return item;
-  }
-
-  Future<void> getPhotoDataByCatID() async {
-    _photoLstByCatID = [];
-    notifyListeners();
-    await FirebaseFirestore.instance
-        .collection('photo')
-        .where('category_id', isEqualTo: categoryLst[index].categoryId)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      snapshot.docs.forEach((element) async {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child(element.data()['photo_url'].split('/').last);
-        // no need of the file extension, the name will do fine.
-        var url = await ref.getDownloadURL();
-        Photo item = await setPhotoData(element.data(), url);
-        var existingItem = _photoLstByCatID.firstWhere(
-            (itemToCheck) => item.isEqual(itemToCheck),
-            orElse: () => newPhoto);
-        if (existingItem.isEqual(newPhoto)) {
-          _photoLstByCatID.add(item);
-        }
-        notifyListeners();
-      });
-      print('Photo Length ${_photoLstByCatID.length}');
-    });
-  }
-
-  Future<void> getCategoryData() async {
-    _categoryLst = [];
-    notifyListeners();
-    FirebaseFirestore.instance
-        .collection('category')
-        .orderBy('created_date')
-        .get()
-        .then((QuerySnapshot snapshot) {
-      _categoryLst = [];
-      snapshot.docs.forEach((element) {
-        _categoryLst.add(
-          Category(
-            categoryId: element.data()['category_id'],
-            categoryName: element.data()['category_name'],
-          ),
-        );
-      });
-      if (categoryLst.isNotEmpty) {
-        index = 0;
-      }
-      notifyListeners();
-    });
-    print(_categoryLst);
   }
 
   String categoryName(String catID) {
     for (var category in _categoryLst) {
       if (category.categoryId == catID) {
         return category.categoryName;
+      }
+    }
+    return '';
+  }
+
+  String userName(String userID) {
+    for (var user in _userLst) {
+      if (user.userId == userID) {
+        return user.userName;
       }
     }
     return '';

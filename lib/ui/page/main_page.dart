@@ -26,6 +26,7 @@ class _MyMainPageState extends State<MyMainPage> {
   @override
   Widget build(BuildContext context) {
     CommonUtils.doInFuture(() {
+      context.read<CategoryListController>().getUserData();
       context.read<CategoryListController>().getCategoryData();
       context.read<CategoryListController>().getPhotoData();
     });

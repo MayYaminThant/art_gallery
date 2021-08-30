@@ -11,9 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class PhotoDetailView extends StatefulWidget {
-  const PhotoDetailView();
-  static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
-
   @override
   _PhotoViewState createState() => _PhotoViewState();
 }
@@ -22,13 +19,11 @@ class _PhotoViewState extends State<PhotoDetailView> {
   @override
   Widget build(BuildContext context) {
     CommonUtils.doInFuture(() {
-      context.read<CategoryListController>().getCategoryData();
-      context.read<CategoryListController>().getPhotoData();
+      context.read<PhotoDetailController>().isShowDetail = true;
     });
     return SafeArea(
       child: Scaffold(
         appBar: appBar(),
-        key: PhotoDetailView.scaffoldKey,
         body: body(context),
       ),
     );

@@ -19,7 +19,7 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 0, // viewModePadding,
+        left: 0,
       ),
       child: _artList(context),
     );
