@@ -69,22 +69,31 @@ class PhotoViewWidget extends StatelessWidget {
   }
 
   _showValue(context, String key, String value) {
-    double thirdOfWidth = ScreenSizeUtil.screenWidth(context) / 3;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          width: thirdOfWidth - 40,
-          child: Text(key,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: fontSize17)),
+          width: _labelWidth(context),
+          child: Text(
+            key,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: fontSize17,
+            ),
+          ),
         ),
-        Text(value,
+        Expanded(
+          child: Text(
+            value,
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
-            style: TextStyle(color: Colors.white, fontSize: fontSize14)),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: fontSize14,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -94,15 +103,21 @@ class PhotoViewWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          width: ScreenSizeUtil.screenWidth(context) / 3,
-          child: Text(key,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: fontSize17)),
+          width: _labelWidth(context),
+          child: Text(
+            key,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: fontSize17,
+            ),
+          ),
         ),
         ratingBar(value, Colors.white30),
       ],
     );
   }
+
+  double _labelWidth(BuildContext ctx) =>
+      (ScreenSizeUtil.screenWidth(ctx) / 3) - 40;
 }

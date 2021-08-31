@@ -110,3 +110,17 @@ Color? get black45 {
 Color? get grey800 {
   return Colors.grey.shade800;
 }
+
+class Header extends StatelessWidget {
+  const Header(this.heading);
+  final String heading;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          heading,
+          style: TextStyle(fontSize: 24),
+        ),
+      );
+}
