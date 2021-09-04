@@ -45,7 +45,7 @@ class PhotoViewWidget extends StatelessWidget {
       BuildContext context, CategoryListController catController) {
     return [
       _showValue(context, 'Category', catController.photo.categoryName),
-      _showValue(context, 'Painter', catController.photo.userName),
+      _showValue(context, 'Painter', catController.photo.customerName),
       _showRating(context, 'Rating', catController.photo.rating),
       _showValue(context, 'Description', catController.photo.photoDescription),
       _showValue(

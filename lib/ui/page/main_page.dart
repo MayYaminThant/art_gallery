@@ -1,4 +1,6 @@
 import '../../controller/category_list_controller.dart';
+import '../../controller/user_auth_controller.dart';
+import '../../ui/menu/sign_in_form.dart';
 import '../../ui/page/view_mode.dart';
 import '../../ui/common_widget/common_widget.dart';
 import '../../util/common_util.dart';
@@ -34,6 +36,7 @@ class _MyMainPageState extends State<MyMainPage> {
       child: Scaffold(
         key: MyMainPage.scaffoldKey,
         body: body(context),
+        drawer: drawer(),
       ),
     );
   }
@@ -110,7 +113,21 @@ class _MyMainPageState extends State<MyMainPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(appTitle, style: appTitleStyle()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        MyMainPage.scaffoldKey.currentState!.openDrawer();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.menu_rounded),
+                      ),
+                    ),
+                    Text(appTitle, style: appTitleStyle()),
+                  ],
+                ),
                 SizedBox(height: 15),
                 searchBox(() {}),
                 SizedBox(height: 30),
@@ -119,6 +136,52 @@ class _MyMainPageState extends State<MyMainPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Drawer drawer() {
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(top: 8.0),
+                children: <Widget>[
+                  Consumer<AuthStateController>(
+                    builder: (context, stateController, _) => ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text(stateController.currentUser != null
+                          ? stateController.currentUser!.displayName.toString()
+                          : ''),
+                      onTap: () {},
+                    ),
+                  ),
+                  Divider(),
+                  Consumer<AuthStateController>(
+                    builder: (context, stateController, _) => ListTile(
+                      leading: Icon(Icons.exit_to_app),
+                      title: Text('Logout'),
+                      onTap: () {
+                        stateController.signOut();
+                        stateController.loginState =
+                            ApplicationLoginState.emailAddress;
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (bContext) => SignInForm()),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

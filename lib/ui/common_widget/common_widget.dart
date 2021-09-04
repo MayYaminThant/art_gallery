@@ -1,4 +1,6 @@
-import 'package:art_gallery/model/photo.dart';
+import '../../model/photo.dart';
+import '../../util/screen_size_util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +31,7 @@ Photo get newPhoto => Photo(
     photoName: '',
     photoUrl: '0',
     categoryName: '',
-    userName: '',
+    customerName: '',
     photoDescription: '',
     rating: 0);
 
@@ -111,16 +113,149 @@ Color? get grey800 {
   return Colors.grey.shade800;
 }
 
-class Header extends StatelessWidget {
-  const Header(this.heading);
-  final String heading;
+class StyledButton extends StatelessWidget {
+  const StyledButton({required this.child, required this.onPressed});
+  final Widget child;
+  final void Function() onPressed;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text(
-          heading,
-          style: TextStyle(fontSize: 24),
+  Widget build(BuildContext context) => Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          child: child,
+          style: ElevatedButton.styleFrom(
+            primary: Colors.black38,
+            textStyle: TextStyle(
+              fontSize: 16.5,
+            ),
+          ),
         ),
       );
+}
+
+loginParentBody(
+  GlobalKey<FormState> _formKey,
+  String? errorString,
+  List<Widget> children,
+) {
+  return Padding(
+    padding: EdgeInsets.all(12),
+    child: Column(
+      children: [
+        Form(
+          key: _formKey,
+          child: Column(
+            children: children,
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+commonLoginTextFeild(
+  TextEditingController _textController,
+  InputDecoration decoration,
+  String? Function(String?) validator,
+) {
+  return Container(
+    height: 55,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(
+          color: black12!,
+          offset: const Offset(
+            3.0,
+            3.0,
+          ),
+          blurRadius: 5.0,
+          spreadRadius: 1.0,
+        ),
+        BoxShadow(
+          color: Colors.white,
+          offset: const Offset(0.0, 0.0),
+          blurRadius: 0.0,
+          spreadRadius: 0.0,
+        ),
+      ],
+    ),
+    child: Center(
+      child: TextFormField(
+        cursorColor: black45,
+        controller: _textController,
+        decoration: decoration,
+        validator: validator,
+      ),
+    ),
+  );
+}
+
+InputDecoration loginTextFeildDecoration() {
+  return InputDecoration(
+    hintText: 'Email Address',
+    hintStyle: TextStyle(
+      color: black26,
+      fontWeight: FontWeight.bold,
+    ),
+    fillColor: Colors.white,
+    border: InputBorder.none,
+    focusedBorder: InputBorder.none,
+    enabledBorder: InputBorder.none,
+    errorBorder: InputBorder.none,
+    disabledBorder: InputBorder.none,
+    contentPadding: EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+  );
+}
+
+void showErrorDialog(BuildContext context, String title, Exception e) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(fontSize: 24),
+        ),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              Text(
+                '${(e as dynamic).message}',
+                style: TextStyle(fontSize: 18),
+              )
+            ],
+          ),
+        ),
+        actions: [
+          StyledButton(
+              child: Text('OK', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              })
+        ],
+      );
+    },
+  );
+}
+
+getLoginHeaderUI(BuildContext context, List<Widget> children) {
+  double height = ScreenSizeUtil.screenHeight(context);
+  return Padding(
+    padding: const EdgeInsets.all(17.0),
+    child: Container(
+      width: double.infinity,
+      height: height * 0.25,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: children,
+      ),
+    ),
+  );
 }

@@ -1,14 +1,14 @@
-class User {
-  final String userId;
-  final String userName;
-  final String? userStatus;
+class Customer {
+  final String customerId;
+  final String customerName;
+  final String? customerStatus;
   final String? createdDate;
   final String? modifiedDate;
 
-  User({
-    required this.userId,
-    required this.userName,
-    this.userStatus,
+  Customer({
+    required this.customerId,
+    required this.customerName,
+    this.customerStatus,
     this.createdDate,
     this.modifiedDate,
   });

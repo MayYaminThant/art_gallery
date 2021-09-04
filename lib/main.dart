@@ -1,7 +1,9 @@
 import '../controller/photo_detail_controller.dart';
 import '../controller/category_list_controller.dart';
+import '../controller/user_auth_controller.dart';
 import '../ui/common_widget/common_widget.dart';
-import '../ui/page/main_page.dart';
+import '../ui/page/splash_screen.dart';
+import '../util/common_util.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,21 +29,32 @@ class MyAppProvider extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => PhotoDetailController(true),
         ),
+        ChangeNotifierProvider(
+          create: (_) => AuthStateController(),
+        ),
       ],
       child: MyApp(),
     );
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    CommonUtils.doInFuture(() {
+      context.read<AuthStateController>().init();
+    });
     final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.sarabunTextTheme(textTheme)),
       title: appTitle,
       debugShowCheckedModeBanner: false,
-      home: MyMainPage(),
+      home: SplashScreen(),
     );
   }
 }

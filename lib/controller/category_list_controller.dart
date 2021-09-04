@@ -27,8 +27,8 @@ class CategoryListController with ChangeNotifier {
   List<Category> _categoryLst = [];
   List<Category> get categoryLst => _categoryLst;
 
-  List<User> _userLst = [];
-  List<User> get userLst => _userLst;
+  List<Customer> _customerLst = [];
+  List<Customer> get customerLst => _customerLst;
 
   String _searchTerm;
 
@@ -76,28 +76,25 @@ class CategoryListController with ChangeNotifier {
   }
 
   Future<void> getUserData() async {
-    _userLst = [];
+    _customerLst = [];
     notifyListeners();
     FirebaseFirestore.instance
         .collection("user")
         .orderBy("created_date", descending: true)
         .get()
         .then((QuerySnapshot snapshot) {
-      _userLst = [];
+      _customerLst = [];
       snapshot.docs.forEach((element) {
-        _userLst.add(
-          User(
-            userId: element.data()['user_id'],
-            userName: element.data()['user_name'],
+        _customerLst.add(
+          Customer(
+            customerId: element.data()['user_id'],
+            customerName: element.data()['user_name'],
           ),
         );
       });
-      if (userLst.isNotEmpty) {
-        index = 0;
-      }
       notifyListeners();
     });
-    print(_userLst);
+    print(_customerLst);
   }
 
   Future<void> getCategoryData() async {
@@ -212,7 +209,7 @@ class CategoryListController with ChangeNotifier {
       categoryName: categoryName(data['category_id']),
       createdDate: createdDateFormat,
       modifiedDate: modifiedDateFormat,
-      userName: userName(data['artist_id']),
+      customerName: customerName(data['artist_id']),
       photoDescription: data['photo_description'],
       rating: double.parse(data['rate'].toString()),
     );
@@ -228,10 +225,10 @@ class CategoryListController with ChangeNotifier {
     return '';
   }
 
-  String userName(String userID) {
-    for (var user in _userLst) {
-      if (user.userId == userID) {
-        return user.userName;
+  String customerName(String customerID) {
+    for (var customer in _customerLst) {
+      if (customer.customerId == customerID) {
+        return customer.customerName;
       }
     }
     return '';

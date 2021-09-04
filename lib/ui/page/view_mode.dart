@@ -1,6 +1,7 @@
 import '../../controller/category_list_controller.dart';
 import '../../ui/page/photo_view_page.dart';
 import '../../ui/common_widget/common_widget.dart';
+import '../../model/photo.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -94,8 +95,8 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
                     itemCount: catController.photoLstByCatID.length,
                     itemBuilder: (BuildContext context, int index) => Center(
                       child: InkWell(
-                        onTap:
-                            gestureTapCallback(context, catController, index),
+                        onTap: gestureTapCallback(context, catController,
+                            catController.photoLstByCatID, index),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child:
@@ -137,7 +138,8 @@ get _popularArtList => Consumer<CategoryListController>(
           itemCount: catController.filterPhotoLst.length,
           itemBuilder: (BuildContext context, int index) => Center(
             child: InkWell(
-              onTap: gestureTapCallback(context, catController, index),
+              onTap: gestureTapCallback(
+                  context, catController, catController.filterPhotoLst, index),
               child: Container(
                 decoration: artBoxDecoration(),
                 height: 115,
@@ -203,10 +205,14 @@ Expanded artMiddleBody(CategoryListController catController, int index) {
 BoxDecoration artBoxDecoration() {
   return BoxDecoration(
     borderRadius: BorderRadius.circular(6),
-    gradient: LinearGradient(colors: [
-      Colors.white10,
-      Colors.grey.shade200,
-    ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+    gradient: LinearGradient(
+      colors: [
+        Colors.white10,
+        Colors.grey.shade200,
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
   );
 }
 
@@ -237,10 +243,10 @@ Text artText(String text, Color? fontColor, int? maxLine,
   );
 }
 
-GestureTapCallback gestureTapCallback(
-    BuildContext context, CategoryListController catController, int index) {
+GestureTapCallback gestureTapCallback(BuildContext context,
+    CategoryListController catController, List<Photo> list, int index) {
   return () async {
-    catController.photo = catController.filterPhotoLst[index];
+    catController.photo = list[index];
 
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return PhotoDetailView();

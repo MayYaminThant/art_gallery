@@ -1,5 +1,5 @@
 class Photo {
-  final String userName;
+  final String customerName;
   final String categoryId;
   final String? createdDate;
   final String? modifiedDate;
@@ -12,7 +12,7 @@ class Photo {
   final double rating;
 
   Photo({
-    required this.userName,
+    required this.customerName,
     required this.categoryId,
     this.createdDate,
     this.modifiedDate,
@@ -26,7 +26,7 @@ class Photo {
   });
 
   isEqual(Photo object) {
-    if (object.userName == userName &&
+    if (object.customerName == customerName &&
         object.photoId == photoId &&
         object.photoUrl == photoUrl &&
         object.photoName == photoName &&
