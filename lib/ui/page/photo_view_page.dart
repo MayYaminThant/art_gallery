@@ -8,7 +8,7 @@ import '../../util/screen_size_util.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:photo_view/photo_view.dart';
 
 class PhotoDetailView extends StatefulWidget {
   @override
@@ -67,7 +67,7 @@ class _PhotoViewState extends State<PhotoDetailView> {
         body: Consumer<CategoryListController>(
           builder: (BuildContext bContex, catController, _) =>
               catController.photo.photoUrl != '0'
-                  ? cachedNetworkImage(context, catController)
+                  ? photoViewWidget(context, catController)
                   : SizedBox(),
         ),
         child: PhotoViewWidget(),
@@ -75,15 +75,26 @@ class _PhotoViewState extends State<PhotoDetailView> {
     );
   }
 
-  CachedNetworkImage cachedNetworkImage(
-      BuildContext context, CategoryListController catController) {
-    return CachedNetworkImage(
-      fit: BoxFit.contain,
+  photoViewWidget(
+    BuildContext context,
+    CategoryListController catController,
+  ) {
+    return Container(
       width: ScreenSizeUtil.screenWidth(context),
-      imageUrl: catController.photo.photoUrl,
-      cacheKey: catController.photo.photoId,
-      placeholder: (context, url) => CircularProgressIndicator(),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      height: ScreenSizeUtil.screenHeight(context),
+      padding: EdgeInsets.all(20),
+      child: PhotoView(
+        backgroundDecoration: BoxDecoration(
+          color: Colors.transparent,
+        ),
+        imageProvider: NetworkImage(
+          catController.photo.photoUrl,
+        ),
+        loadingBuilder: (_, __) => Center(
+          child: CircularProgressIndicator(),
+        ),
+        errorBuilder: (_, __, ___) => Icon(Icons.error),
+      ),
     );
   }
 }

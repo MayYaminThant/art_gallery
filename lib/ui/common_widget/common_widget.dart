@@ -33,7 +33,10 @@ Photo get newPhoto => Photo(
     categoryName: '',
     customerName: '',
     photoDescription: '',
-    rating: 0);
+    rating: 0,
+    price: 0,
+    createdDate: '',
+    modifiedDate: '');
 
 RatingBar ratingBar(rating, unRatedClr) {
   return RatingBar.builder(
@@ -171,6 +174,22 @@ commonLoginTextFeild(
   InputDecoration decoration,
   String? Function(String?) validator,
 ) {
+  return commonLoginTextFeildWithPsw(
+    _textController,
+    false,
+    false,
+    decoration,
+    validator,
+  );
+}
+
+commonLoginTextFeildWithPsw(
+  TextEditingController _textController,
+  bool isShowIcon,
+  bool isShowPassword,
+  InputDecoration decoration,
+  String? Function(String?) validator,
+) {
   return Container(
     height: 55,
     decoration: BoxDecoration(
@@ -199,12 +218,18 @@ commonLoginTextFeild(
         controller: _textController,
         decoration: decoration,
         validator: validator,
+        obscureText: isShowIcon ? !isShowPassword : false,
       ),
     ),
   );
 }
 
 InputDecoration loginTextFeildDecoration() {
+  return loginTextFeildDecorationIncludePsw(false, false, () {});
+}
+
+InputDecoration loginTextFeildDecorationIncludePsw(
+    _showIcon, _showPassword, VoidCallback voidCallback) {
   return InputDecoration(
     hintText: 'Email Address',
     hintStyle: TextStyle(
@@ -218,6 +243,15 @@ InputDecoration loginTextFeildDecoration() {
     errorBorder: InputBorder.none,
     disabledBorder: InputBorder.none,
     contentPadding: EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+    suffixIcon: (_showIcon
+        ? GestureDetector(
+            onTap: voidCallback,
+            child: Icon(
+              _showPassword ? Icons.visibility_off : Icons.visibility,
+              color: Colors.black54,
+            ),
+          )
+        : null),
   );
 }
 

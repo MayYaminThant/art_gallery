@@ -10,15 +10,14 @@ enum ApplicationLoginState {
 
 class AuthStateController extends ChangeNotifier {
   Future<ApplicationLoginState> init() async {
-    FirebaseAuth.instance.userChanges().listen((user) {
-      if (user != null) {
-        _loginState = ApplicationLoginState.loggedIn;
-        _currentUser = user;
-      } else {
-        _loginState = ApplicationLoginState.loggedOut;
-        _currentUser = null;
-      }
-    });
+    if (FirebaseAuth.instance.currentUser != null) {
+      _loginState = ApplicationLoginState.loggedIn;
+      _currentUser = FirebaseAuth.instance.currentUser;
+    } else {
+      _loginState = ApplicationLoginState.loggedOut;
+      _currentUser = null;
+    }
+
     return _loginState;
   }
 
@@ -56,10 +55,12 @@ class AuthStateController extends ChangeNotifier {
       var methods =
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.contains('password')) {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential credential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
+        _currentUser = credential.user;
         loginState = ApplicationLoginState.loggedIn;
       } else {
         errorString = 'No account with your email. Please register first!';

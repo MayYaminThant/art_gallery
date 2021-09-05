@@ -1,7 +1,9 @@
 import '../../controller/user_auth_controller.dart';
+import '../../controller/password_visibility_controller.dart';
 import '../../ui/menu/register_form.dart';
 import '../../ui/page/main_page.dart';
 import '../../ui/common_widget/common_widget.dart';
+import '../../util/common_util.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,14 @@ class _SignInFormState extends State<SignInForm> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_PasswordFormState');
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    CommonUtils.doInFuture(() {
+      context.read<PasswordVisibilityController>().isShowPassword = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +84,24 @@ class _SignInFormState extends State<SignInForm> {
         },
       ),
       sizeBoxBetweenColumnCells,
-      commonLoginTextFeild(
-        _passwordController,
-        loginTextFeildDecoration().copyWith(
-          hintText: 'Password',
+      Consumer<PasswordVisibilityController>(
+        builder: (context, pswController, _) => commonLoginTextFeildWithPsw(
+          _passwordController,
+          true,
+          pswController.isShowPassword,
+          loginTextFeildDecorationIncludePsw(true, pswController.isShowPassword,
+              () {
+            pswController.isShowPassword = !pswController.isShowPassword;
+          }).copyWith(
+            hintText: 'Password',
+          ),
+          (value) {
+            if (value!.isEmpty) {
+              return 'Enter your password';
+            }
+            return null;
+          },
         ),
-        (value) {
-          if (value!.isEmpty) {
-            return 'Enter your password';
-          }
-          return null;
-        },
       ),
       sizeBoxBetweenColumnCells,
       Consumer<AuthStateController>(

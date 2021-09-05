@@ -1,5 +1,6 @@
 import '../controller/photo_detail_controller.dart';
 import '../controller/category_list_controller.dart';
+import '../../controller/password_visibility_controller.dart';
 import '../controller/user_auth_controller.dart';
 import '../ui/common_widget/common_widget.dart';
 import '../ui/page/splash_screen.dart';
@@ -30,6 +31,9 @@ class MyAppProvider extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AuthStateController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PasswordVisibilityController(),
         ),
       ],
       child: MyApp(),

@@ -22,10 +22,10 @@ class AnimateRightToLeft extends StatelessWidget {
           child: body,
         ),
         AnimatedContainer(
-          duration: Duration(seconds: 1),
+          duration: Duration(milliseconds: 200),
           alignment: visible ? Alignment.center : Alignment.centerRight,
           child: AnimatedOpacity(
-            duration: Duration(seconds: 1),
+            duration: Duration(milliseconds: 200),
             opacity: visible ? 1.0 : 0.0,
             child: child,
           ),
