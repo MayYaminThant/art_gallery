@@ -45,10 +45,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     CommonUtils.doInFuture(() {
       context.read<AuthStateController>().init();
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.sarabunTextTheme(textTheme)),
