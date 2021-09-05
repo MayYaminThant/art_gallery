@@ -9,18 +9,17 @@ enum ApplicationLoginState {
 }
 
 class AuthStateController extends ChangeNotifier {
-  Future<void> init() async {
+  Future<ApplicationLoginState> init() async {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
-        // _loginState = ApplicationLoginState.loggedOut;
         _currentUser = user;
       } else {
         _loginState = ApplicationLoginState.loggedOut;
         _currentUser = null;
       }
-      notifyListeners();
     });
+    return _loginState;
   }
 
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;

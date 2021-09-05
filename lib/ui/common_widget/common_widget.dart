@@ -73,6 +73,10 @@ TextStyle photoViewTitleStyle() {
   return getTitleStyle(Colors.white);
 }
 
+TextStyle loginTitleStyle() {
+  return getTitleStyle(Colors.black);
+}
+
 getTitleStyle(Color color) {
   return GoogleFonts.dmSerifDisplay(
     fontWeight: FontWeight.w700,
@@ -109,6 +113,10 @@ Color? get black45 {
   return Colors.black45;
 }
 
+Color? get black54 {
+  return Colors.black54;
+}
+
 Color? get grey800 {
   return Colors.grey.shade800;
 }
@@ -129,7 +137,7 @@ class StyledButton extends StatelessWidget {
           onPressed: onPressed,
           child: child,
           style: ElevatedButton.styleFrom(
-            primary: Colors.black38,
+            primary: Colors.black.withOpacity(0.85),
             textStyle: TextStyle(
               fontSize: 16.5,
             ),
@@ -200,7 +208,7 @@ InputDecoration loginTextFeildDecoration() {
   return InputDecoration(
     hintText: 'Email Address',
     hintStyle: TextStyle(
-      color: black26,
+      color: Colors.black.withOpacity(0.3),
       fontWeight: FontWeight.bold,
     ),
     fillColor: Colors.white,

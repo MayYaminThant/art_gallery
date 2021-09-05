@@ -99,23 +99,24 @@ class _ViewModeWidgetState extends State<ViewModeWidget2> {
                             catController.photoLstByCatID, index),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child:
-                              catController.photoLstByCatID[index].photoUrl !=
-                                      '0'
-                                  ? CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      height: 280,
-                                      width: 160,
-                                      imageUrl: catController
-                                          .photoLstByCatID[index].photoUrl,
-                                      cacheKey: catController
-                                          .photoLstByCatID[index].photoId,
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    )
-                                  : SizedBox(),
+                          child: catController
+                                      .photoLstByCatID[index].photoUrl !=
+                                  '0'
+                              ? CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  height: 280,
+                                  width: 160,
+                                  imageUrl: catController
+                                      .photoLstByCatID[index].photoUrl,
+                                  cacheKey: catController
+                                      .photoLstByCatID[index].photoId,
+                                  progressIndicatorBuilder: (context, url, _) =>
+                                      Center(
+                                          child: CircularProgressIndicator()),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                )
+                              : SizedBox(),
                         ),
                       ),
                     ),
@@ -224,7 +225,8 @@ CachedNetworkImage cachedNetworkImage(
     width: 130,
     imageUrl: catController.filterPhotoLst[index].photoUrl,
     cacheKey: catController.filterPhotoLst[index].photoId,
-    placeholder: (context, url) => CircularProgressIndicator(),
+    progressIndicatorBuilder: (context, url, _) =>
+        Center(child: CircularProgressIndicator()),
     errorWidget: (context, url, error) => Icon(Icons.error),
   );
 }

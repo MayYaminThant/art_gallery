@@ -3,7 +3,6 @@ import '../controller/category_list_controller.dart';
 import '../controller/user_auth_controller.dart';
 import '../ui/common_widget/common_widget.dart';
 import '../ui/page/splash_screen.dart';
-import '../util/common_util.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,15 +43,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-
-    CommonUtils.doInFuture(() {
-      context.read<AuthStateController>().init();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;

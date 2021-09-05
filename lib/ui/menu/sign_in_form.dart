@@ -32,15 +32,15 @@ class _SignInFormState extends State<SignInForm> {
                 getLoginHeaderUI(context, [
                   Text(
                     'Hello Again!',
-                    style: getTitleStyle(black45!),
+                    style: loginTitleStyle(),
                   ),
                   Text(
                     'Welcome',
-                    style: getTitleStyle(black45!),
+                    style: loginTitleStyle(),
                   ),
                   Text(
                     'back',
-                    style: getTitleStyle(black45!),
+                    style: loginTitleStyle(),
                   ),
                 ]),
                 Consumer<AuthStateController>(

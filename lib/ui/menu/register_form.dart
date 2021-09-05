@@ -32,15 +32,15 @@ class _RegisterFormState extends State<RegisterForm> {
                 getLoginHeaderUI(context, [
                   Text(
                     'Hello!',
-                    style: getTitleStyle(black45!),
+                    style: loginTitleStyle(),
                   ),
                   Text(
                     'Signup to',
-                    style: getTitleStyle(black45!),
+                    style: loginTitleStyle(),
                   ),
                   Text(
                     'get started',
-                    style: getTitleStyle(black45!),
+                    style: loginTitleStyle(),
                   ),
                 ]),
                 Consumer<AuthStateController>(

@@ -20,21 +20,26 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() {
     CommonUtils.doInFuture(
       () {
         Future.delayed(
           Duration(seconds: 4),
-          () {
+          () async {
+            ApplicationLoginState loginState =
+                await context.read<AuthStateController>().init();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (bContext) =>
-                    (bContext.read<AuthStateController>().loginState ==
-                            ApplicationLoginState.loggedIn)
+                    (loginState == ApplicationLoginState.loggedIn)
                         ? MyMainPage()
-                        : (bContext.read<AuthStateController>().loginState ==
-                                ApplicationLoginState.register
+                        : (loginState == ApplicationLoginState.register
                             ? RegisterForm()
                             : SignInForm()),
               ),
@@ -43,15 +48,18 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       },
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: _getLoginLogo(),
+        body: _getLoginHeader(),
       ),
     );
   }
 
-  _getLoginLogo() {
+  _getLoginHeader() {
     double height = ScreenSizeUtil.screenHeight(context);
     return Container(
       width: double.infinity,
@@ -79,9 +87,8 @@ class _SplashScreenState extends State<SplashScreen> {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Colors.black45,
-          Colors.grey.shade900,
           Colors.black,
+          Colors.black87,
         ],
       ),
     );
@@ -123,20 +130,20 @@ class _SplashScreenState extends State<SplashScreen> {
   get colorizeBigTextStyle => GoogleFonts.dmSerifDisplay(
         fontSize: 30,
         letterSpacing: 3,
-        color: Colors.black54,
+        color: Colors.black,
         fontWeight: FontWeight.w700,
       );
 
   get colorizeSmallTextStyle => GoogleFonts.dmSerifDisplay(
         fontSize: 20,
-        color: Colors.black54,
+        color: Colors.black,
         letterSpacing: 2,
       );
 
   get colorizeColors => [
-        Colors.orange,
-        Colors.black54,
-        Colors.purple,
-        Colors.amber,
+        Colors.white,
+        Colors.black,
+        Colors.white,
+        Colors.black,
       ];
 }
