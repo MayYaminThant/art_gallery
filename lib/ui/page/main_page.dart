@@ -105,35 +105,45 @@ class _MyMainPageState extends State<MyMainPage> {
         color: Colors.white12,
         displacement: 165,
         strokeWidth: 3,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding:
-                EdgeInsets.only(left: padding25, right: 0, top: 8, bottom: 8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        MyMainPage.scaffoldKey.currentState!.openDrawer();
-                      },
-                      child: Icon(Icons.menu_rounded),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(appTitle, style: appTitleStyle()),
-                    ),
-                  ],
+        child: Padding(
+          padding:
+              EdgeInsets.only(left: padding25, right: 0, top: 8, bottom: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          MyMainPage.scaffoldKey.currentState!.openDrawer();
+                        },
+                        child: Icon(Icons.menu_rounded),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(appTitle, style: appTitleStyle()),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  searchBox(() {}),
+                  SizedBox(height: 30),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ViewModeWidget2(),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 15),
-                searchBox(() {}),
-                SizedBox(height: 30),
-                ViewModeWidget2(),
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),
